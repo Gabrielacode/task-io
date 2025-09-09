@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 //This is the entity class for a Task
@@ -29,8 +30,11 @@ public class Task {
     String name;
     String description;
     //We will use Local Date and Time so as to be get time based on the server locale
+    //We will use this persist when the entity is first created
+    @CreationTimestamp
+    @Column(updatable = false)
     LocalDateTime createdTime;
-    boolean isCompleted;
+    boolean isCompleted = false;
     @ManyToOne()
     @JoinColumn(name = "task_group_id")
     TaskGroup taskGroup;

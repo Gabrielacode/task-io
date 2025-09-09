@@ -1,15 +1,14 @@
 package com.garbi.taskio.entity;
 
 import com.garbi.taskio.constants.TaskGroupPriority;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /// This is a Task Group entity
@@ -29,9 +28,12 @@ public class TaskGroup {
 
     String name;
     String description;
+    @CreationTimestamp
+    LocalDateTime createdTime;
     TaskGroupPriority priority;
 
-    @OneToMany(mappedBy = "taskGroup")
+    //We want to cascade all operations to the children
+    @OneToMany(mappedBy = "taskGroup",cascade = CascadeType.ALL)
     List<Task> tasks;
 
 
