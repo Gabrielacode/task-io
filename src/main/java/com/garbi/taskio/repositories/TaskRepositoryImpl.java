@@ -9,6 +9,10 @@ import java.util.Optional;
 
 @Repository
 public interface TaskRepositoryImpl  extends JpaRepository<Task, Integer> {
-    //Then we implement ourtask repository
+    //Then we implement our task repository
+
+    //This is so theat we can check if there is a task that belongs to this id and has the group id of this
+    Optional<Task> findTaskByIdAndTaskGroupId(Integer taskId, Integer taskGroupId);
+   List<Task> findTasksByTaskGroupId(Integer taskGroupId);
 
 }

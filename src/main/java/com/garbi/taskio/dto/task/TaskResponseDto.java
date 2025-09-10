@@ -6,6 +6,7 @@ public record TaskResponseDto (
         String name,
         String description,
         String createdTime,
+        boolean isCompleted,
         String taskGroupId,
         String taskGroupName
 

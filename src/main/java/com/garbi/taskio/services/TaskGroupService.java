@@ -1,16 +1,20 @@
 package com.garbi.taskio.services;
 
 import com.garbi.taskio.dto.mappers.TaskGroupMapper;
+import com.garbi.taskio.dto.mappers.TaskMapper;
+import com.garbi.taskio.dto.task.TaskResponseDto;
 import com.garbi.taskio.dto.taskgroup.TaskGroupRequestDto;
 import com.garbi.taskio.dto.taskgroup.TaskGroupResponseDto;
 import com.garbi.taskio.entity.Task;
 import com.garbi.taskio.entity.TaskGroup;
-import com.garbi.taskio.exceptions.TaskGroupNotFound;
-import com.garbi.taskio.exceptions.TaskNotFound;
+import com.garbi.taskio.exceptions.TaskGroupNotFoundException;
+import com.garbi.taskio.exceptions.TaskNotFoundException;
 import com.garbi.taskio.repositories.TaskGroupRepositoryImpl;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 ///  This service will handle all the operations that are carried
 ///  We will be able to carry out these activities in the task group
@@ -39,11 +43,11 @@ public class TaskGroupService {
       return TaskGroupMapper.taskGroupToTaskGroupResponse(group);
  }
 
- public TaskGroupResponseDto updateTaskGroup(TaskGroupRequestDto dto, Integer id ) throws TaskGroupNotFound{
+ public TaskGroupResponseDto updateTaskGroup(TaskGroupRequestDto dto, Integer id ) throws TaskGroupNotFoundException{
      //We will  update it by checking if the task group is there and then
      // We will then  update it
      Optional<TaskGroup> isTaskGroupInDbResult = taskGroupRepository.findById(id);
-     var taskGroup = isTaskGroupInDbResult.orElseThrow(TaskGroupNotFound::new);
+     var taskGroup = isTaskGroupInDbResult.orElseThrow(TaskGroupNotFoundException::new);
      var updatedTaskGroup =  TaskGroupMapper.updateTaskFromTaskUpdateRequestDto(dto, taskGroup);
      updatedTaskGroup = taskGroupRepository.save(updatedTaskGroup);
      return  TaskGroupMapper.taskGroupToTaskGroupResponse(updatedTaskGroup);
@@ -51,8 +55,13 @@ public class TaskGroupService {
  }
  //Then  the delete operation
 
-    public void deleteTaskGroupById(Integer id){
+    public void deleteTaskGroupById(Integer id) throws TaskGroupNotFoundException{
+        if (!taskGroupRepository.existsById(id))  throw new TaskGroupNotFoundException();
         taskGroupRepository.deleteById(id);
+    }
+    //This will get all the list of the Task Groups in the db
+    public List<TaskGroupResponseDto> getAllTasks(){
+        return  taskGroupRepository.findAll().stream().map(TaskGroupMapper::taskGroupToTaskGroupResponse).collect(Collectors.toList());
     }
 
 

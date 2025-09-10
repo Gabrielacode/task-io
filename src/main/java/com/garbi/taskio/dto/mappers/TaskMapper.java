@@ -18,7 +18,8 @@ public final class TaskMapper {
     }
 
     public static TaskResponseDto taskToTaskResponse(Task task){
-        return  new TaskResponseDto(task.getId(),task.getName(),task.getDescription(),task.getCreatedTime().toString(),task.getTaskGroup().getId().toString(),task.getTaskGroup().getName());
+        return  new TaskResponseDto(
+                task.getId(),task.getName(),task.getDescription(),task.getCreatedTime().toString(), task.isCompleted(),task.getTaskGroup().getId().toString(),task.getTaskGroup().getName());
     }
     public static Task updateTaskFromTaskUpdateRequestDto(TaskUpdateRequestDto dto, Task task){
         //Then we will set the values
