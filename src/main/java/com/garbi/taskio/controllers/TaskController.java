@@ -4,6 +4,7 @@ import com.garbi.taskio.dto.task.TaskCreateRequestDto;
 import com.garbi.taskio.dto.task.TaskResponseDto;
 import com.garbi.taskio.dto.task.TaskUpdateRequestDto;
 import com.garbi.taskio.services.TaskService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,10 +22,17 @@ public class TaskController {
     public List<TaskResponseDto> getAllTasks(@PathVariable("group-id") Integer groupId){
         return taskService.getAllTasks(groupId);
     }
+    @GetMapping("/task-group/{group-id}/task/{task-id}")
+    public TaskResponseDto getTaskById(
+            @PathVariable("group-id") Integer groupId,
+            @PathVariable("task-id") Integer taskId){
+        return taskService.getTaskById(taskId,groupId);
+    }
+
     //This method will create a new task and the task has to be under a task group
 
     @PostMapping("/task-group/{group-id}/task")
-    public  TaskResponseDto createNewTaskUnderTaskGroup( @RequestBody TaskCreateRequestDto dto,
+    public  TaskResponseDto createNewTaskUnderTaskGroup( @Valid @RequestBody TaskCreateRequestDto dto,
                                                          @PathVariable("group-id") Integer groupId){
         return  taskService.createNewTask(dto,groupId);
     }
@@ -33,7 +41,7 @@ public class TaskController {
     //We must ensure that the user cannot update a card if the card is not in the specified task group
     @PutMapping("/task-group/{group-id}/task/{task-id}")
     public TaskResponseDto updateATaskUnderATaskGroup(
-            @RequestBody TaskUpdateRequestDto dto,
+            @Valid  @RequestBody TaskUpdateRequestDto dto,
             @PathVariable("group-id") Integer groupId,
             @PathVariable("task-id") Integer taskId
     ){

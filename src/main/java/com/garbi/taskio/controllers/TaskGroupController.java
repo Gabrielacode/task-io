@@ -3,6 +3,7 @@ package com.garbi.taskio.controllers;
 import com.garbi.taskio.dto.taskgroup.TaskGroupRequestDto;
 import com.garbi.taskio.dto.taskgroup.TaskGroupResponseDto;
 import com.garbi.taskio.services.TaskGroupService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,13 +25,13 @@ public class TaskGroupController {
 
     //This method will create a new task in the db
     @PostMapping
-    public TaskGroupResponseDto createNewTaskGroup(@RequestBody TaskGroupRequestDto dto){
+    public TaskGroupResponseDto createNewTaskGroup( @Valid @RequestBody TaskGroupRequestDto dto){
         return  taskGroupService.createNewTaskGroup(dto);
     }
 
     //This method will update a task group in the db based on the id passed in the parameter
     @PutMapping("/{id}")
-    public TaskGroupResponseDto updateANewTaskGroup( @RequestBody TaskGroupRequestDto dto,@PathVariable("id")Integer id){
+    public TaskGroupResponseDto updateANewTaskGroup( @Valid @RequestBody TaskGroupRequestDto dto,@PathVariable("id")Integer id){
         return  taskGroupService.updateTaskGroup(dto,id);
     }
 

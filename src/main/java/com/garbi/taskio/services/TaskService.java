@@ -76,4 +76,12 @@ public class TaskService {
     public List<TaskResponseDto> getAllTasks(Integer groupId){
         return  taskRepository.findTasksByTaskGroupId(groupId).stream().map(TaskMapper::taskToTaskResponse).collect(Collectors.toList());
     }
+    public TaskResponseDto getTaskById(Integer taskId , Integer groupId){
+        //First the result
+        Optional<Task> taskResult = taskRepository.findTaskByIdAndTaskGroupId(taskId,groupId);
+        //If the task ispresent then return the task response else throw an exception
+        var task = taskResult.orElseThrow(TaskNotFoundException::new);
+        //Then we map it
+        return  TaskMapper.taskToTaskResponse(task);
+    }
 }
