@@ -1,5 +1,6 @@
 package com.garbi.taskio.security;
 
+import com.garbi.taskio.services.JWTService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -22,6 +23,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.io.IOException;
 import java.util.List;
@@ -61,13 +63,20 @@ public class SecurityConfig {
         return new ProviderManager(providers);
     }
 
+    //We want to insert the Jwt Filter so we will create a Bean for that
+    @Bean
+    public JWTAuthenticationFilter jwtAuthenticationFilter (JWTService jwtService,UserDetailsService userDetailsService){
+        return new JWTAuthenticationFilter(jwtService,userDetailsService);
+    }
     //The filter chain
     @Bean
-    public SecurityFilterChain  filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain  filterChain(HttpSecurity http,JWTAuthenticationFilter jwtAuthenticationFilter) throws Exception {
          //We will not make sure that any request must be authenticated
         //And this project we will use Basic authentication and JWT authentication
        var httpModified =  http
+               .anonymous(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
+               . addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .httpBasic((basic)->{
 
 //                    basic.authenticationEntryPoint(new AuthenticationEntryPoint() {
@@ -81,6 +90,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(matcher -> matcher
                       //Any request should be last in the authorizeRequest chain
                         .requestMatchers("/auth/**").permitAll()
+                                .requestMatchers("/task-group/**").authenticated()
                                 .anyRequest().authenticated()
 
                         //We will see what happ
@@ -90,12 +100,6 @@ public class SecurityConfig {
                 .sessionManagement((session)->{
                     session.sessionCreationPolicy(SessionCreationPolicy.NEVER);
                 })
-               .exceptionHandling(
-                       ex -> ex.authenticationEntryPoint((request,response,exc)->{
-                           System.out.println("Exception Handler"+exc.getMessage());
-
-                       })
-               )
 
                 .build();
 

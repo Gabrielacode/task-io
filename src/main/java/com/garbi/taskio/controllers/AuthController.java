@@ -1,6 +1,7 @@
 package com.garbi.taskio.controllers;
 
 import com.garbi.taskio.dto.auth.LoginRequestDto;
+import com.garbi.taskio.dto.auth.LoginResponseDto;
 import com.garbi.taskio.dto.auth.RegisterRequestDto;
 import com.garbi.taskio.dto.auth.RegisterResponseDto;
 import com.garbi.taskio.services.AuthService;
@@ -27,7 +28,7 @@ public class AuthController {
     }
 
     @PostMapping("/auth/login")
-    public String loginUser(@Valid @RequestBody LoginRequestDto loginRequestDto) {
+    public LoginResponseDto loginUser(@Valid @RequestBody LoginRequestDto loginRequestDto) {
         return  authService.loginUser(loginRequestDto);
     }
 }
