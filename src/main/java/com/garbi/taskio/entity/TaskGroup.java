@@ -32,6 +32,8 @@ public class TaskGroup {
     LocalDateTime createdTime;
     TaskGroupPriority priority;
 
+
+
     //We want to cascade all operations to the children
     @OneToMany(mappedBy = "taskGroup",cascade = CascadeType.ALL)
     List<Task> tasks;

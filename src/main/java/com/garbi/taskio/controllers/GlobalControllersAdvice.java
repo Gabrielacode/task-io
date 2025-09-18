@@ -30,13 +30,18 @@ public class GlobalControllersAdvice {
     //For our error message of our tasks we will just pass "errorMessage":message
 
     @ExceptionHandler(TaskException.class)
-
     public ResponseEntity<?> handleTaskExceptions(TaskException exception){
         Map<String,String > response =  new HashMap<>();
         response.put("errorMessage",exception.getMessage());
         return ResponseEntity.badRequest().body(response);
     }
     //Any other exception for now will be passed  through a string
-
+    //SO that we can debug
+   @ExceptionHandler(Exception.class)
+   public ResponseEntity<?> handleAnyExceptions(Exception exception){
+       Map<String,String > response =  new HashMap<>();
+       response.put("errorMessage",exception.getMessage());
+       return ResponseEntity.internalServerError().body(response);
+   }
 
 }
