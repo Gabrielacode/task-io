@@ -60,8 +60,13 @@ public class TaskGroupService {
         taskGroupRepository.deleteById(id);
     }
     //This will get all the list of the Task Groups in the db
-    public List<TaskGroupResponseDto> getAllTasks(){
+    public List<TaskGroupResponseDto> getAllTasksGroups(){
         return  taskGroupRepository.findAll().stream().map(TaskGroupMapper::taskGroupToTaskGroupResponse).collect(Collectors.toList());
+    }
+    public TaskGroupResponseDto getTaskGroupById(Integer Id) throws TaskGroupNotFoundException{
+        var taskGroupResult = taskGroupRepository.findById(Id);
+        var taskGroup = taskGroupResult.orElseThrow(TaskGroupNotFoundException::new);
+        return TaskGroupMapper.taskGroupToTaskGroupResponse(taskGroup);
     }
 
 

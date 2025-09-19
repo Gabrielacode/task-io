@@ -20,8 +20,13 @@ public class TaskGroupController {
 
     @GetMapping
     public List<TaskGroupResponseDto> getAllTaskGroups(){
-        return  taskGroupService.getAllTasks();
+        return  taskGroupService.getAllTasksGroups();
     }
+    @GetMapping("/{id}")
+    public TaskGroupResponseDto getTaskGroupById(@PathVariable("id")Integer id){
+        return  taskGroupService.getTaskGroupById(id);
+    }
+
 
     //This method will create a new task in the db
     @PostMapping
