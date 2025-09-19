@@ -1,9 +1,10 @@
-# 📝 Task IO
+# 📝 Task IO  
 
 A simple **Spring Boot REST API** for managing tasks and task groups.  
 Each task must belong to a task group, ensuring clear organization and grouping of work.  
 A user can also register or login.  
 Authentication is by Bearer Method 
+
 ---
 
 ## 🚀 Features
